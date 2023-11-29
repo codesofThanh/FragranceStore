@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Project.Models.ProductHe172748>
+
+@{
+    ViewData["Title"] = "AllProduct";
+    Layout = "~/Pages/Shared/_LayoutAdmin.cshtml";
+}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Books</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="Dashboard">Home</a></li>
+                <li class="breadcrumb-item"><a href="AllProduct">All Product</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div style="width: 100%; overflow: scroll" class="card-body">
+                        <div style="display: flex; justify-content: space-between">
+                            <h5 class="card-title">All books</h5>
+                            <a href="/Admin/AddProduct" class="card-title">Add new product</a>
+                        </div>
+                        <!-- Table with stripped rows -->
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(var item in ViewBag.list){
+                                    <tr>
+                                        <th scope="row">@item.Id</th>
+                                        @if (item.Img != null)
+                                        {
+                                            <td><img src="@item.Img" style="width: 100%"></td>
+                                        }else{
+                                            <td><img src="" style="width: 100%"></td>
+                                        }
+                                        <td>@item.Name</td>
+                                        <td>@item.Price</td>
+                                        <td>@item.Description</td>
+                                        <td>
+                                            <a href="/Admin/Edit?id=@item.Id">
+                                                <div class="card-body">
+                                                    <button type="button" class="btn btn-primary">Edit</button>
+                                                </div>
+                                            </a>
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <!-- Vertically centered Modal -->
+                                                    <button style="background: red;border:none" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered@(item.Id)">
+                                                        Delete
+                                                    </button>
+                                                    <div class="modal fade" id="verticalycentered@(item.Id)" tabindex="-1" style="display: none;" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Deleting product id: @item.Name</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Are you sure to want to delete this product?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    <a href="/Admin/Delete?id=@item.Id"><button type="button" class="btn btn-primary">Yes</button></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div><!-- End Vertically centered Modal-->
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <!-- End Table with stripped rows -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->

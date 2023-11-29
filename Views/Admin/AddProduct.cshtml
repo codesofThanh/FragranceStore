@@ -1,0 +1,341 @@
+﻿
+@{
+    ViewData["Title"] = "AddProduct";
+    Layout = "~/Pages/Shared/_LayoutAdmin.cshtml";
+}
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Product</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="Dashboard">Home</a></li>
+                <li class="breadcrumb-item"><a href="/Admin/AllProduct">All Product</a></li>
+                <li class="breadcrumb-item">Product</li>
+            </ol>
+        </nav>
+    </div>
+    @*     <c:if test="${message ne null}">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    </c:if> *@
+
+    @if (ViewBag.actionmsg != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @ViewBag.actionmsg
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!--================Blog Area =================-->
+    <style>
+        #book-cover-img {
+            width: 50%;
+        }
+
+        .section-padding {
+            padding: 1rem 0;
+        }
+
+        .order-form-edit .form-group label {
+            color: red;
+            font-size: .8rem;
+        }
+
+        a#scrollUp {
+            display: none;
+        }
+
+        #new-author-btn,
+        #new-publisher-btn,
+        #new-genre-btn {
+            background-color: #0d6efd;
+            height: 2rem;
+            width: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: .3rem;
+            cursor: pointer;
+        }
+
+        #detail {
+            height: 10rem;
+        }
+
+        .row.mb-3 span.form-message {
+            color: red;
+            font-size: .8rem
+        }
+    </style>
+
+@*     <script defer>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mong muốn của chúng ta
+            Validator({
+                form: '#book__form',
+                formGroupSelector: '.row.mb-3',
+                errorSelector: '.form-message',
+                rules: [
+                    Validator.isRequired('#title', 'Please enter book title!'),
+                    Validator.isRequired('#detail1', 'Please enter description!'),
+                    Validator.isRequired('#detail2', 'Please enter description!'),
+                    Validator.isRequired('#price', 'Please enter price!'),
+                    Validator.isDigitFloat('#price', 'Invalid number!'),
+                    Validator.isRequired('#stock', 'Please enter stock!'),
+                    Validator.isDigit('#stock', 'Invalid number!'),
+                ]
+            });
+        });
+    </script> *@
+
+
+    <form id="book__form" action="/Admin/AddProduct" method="post" enctype="multipart/form-data" class="blog_area single-post-area section-padding">
+        <h1 class="row mb-3">
+            <label for="bookid" class="col-md-4 col-lg-3 col-form-label">Product</label>
+            <div class="col-md-8 col-lg-9">
+                <input style="margin-top: .6rem" hidden name="bookid" type="text" class="form-control" id="bookid" value="">
+                <span class="form-message"></span>
+            </div>
+        </h1>
+        <div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 posts-list">
+                    <div class="single-post">
+                        <div class="feature-img">
+                            <img id="previewImage" class="img-fluid" src="" />
+                            <div class="pt-2">
+                                <label for="uploadInput" class="btn btn-primary btn-sm" title="Upload new profile image">
+                                    <i style="color: #fff" class="bi bi-upload"></i>
+                                    <input name="image" type="file" id="uploadInput" style="display:none">
+                                </label>
+                                <button type="button" id="removeButton" onclick="removeImage()" class="btn btn-danger btn-sm" title="Remove my profile image">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <input value="" name="imageBase64" id="imageBase64" type="text" hidden>
+                        </div>
+                        <div class="blog_details">
+                            <!-- TITLE -->
+                            <div class="row mb-3">
+                                <label for="title" class="col-md-4 col-lg-3 col-form-label">Name</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input name="title" type="text" class="form-control" id="title" value="" required>
+                                    <span class="form-message"></span>
+                                </div>
+                            </div>
+
+                            <!-- genre -->
+                            <div class="row mb-3">
+                                <label for="genre" class="col-md-4 col-lg-3 col-form-label">Brand</label>
+                                <div id="genre__input" class="col-md-6 col-lg-7">
+                                    <select class="form-select" name="genre" id="genre" required>
+                                        @foreach (var item in ViewBag.c)
+                                        {
+                                                <option value="@item.Id">@item.Cname</option>
+                                            
+                                        }
+                                    </select>
+                                    <span class="form-message"></span>
+                                </div>
+                                <div id="new-genre-btn" class="col-md-2 col-lg-2">
+                                    <i style="color: #fff" class="bi bi-cloud-plus-fill"></i>
+                                </div>
+
+                            </div>
+
+
+                            <!-- description -->
+                            <div class="row mb-3">
+                                <label for="title" class="col-md-4 col-lg-3 col-form-label">Description</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <textarea name="detail1" type="text" class="form-control" id="detail" required></textarea>
+                                    <span class="form-message"></span>
+                                </div>
+                            </div>
+                            <!-- description -->
+                            <div class="row mb-3">
+                                <label for="title" class="col-md-4 col-lg-3 col-form-label">Description</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <textarea name="detail2" type="text" class="form-control" id="detail" required></textarea>
+                                    <span class="form-message"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="blog_right_sidebar">
+                        <aside class="single_sidebar_widget search_widget">
+                            <!-- price -->
+                            <h3 class="row mb-3">
+                                <label for="price" class="col-md-4 col-lg-3 col-form-label">Price</label>
+                                <div class="col-md-8 col-lg-9 input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input name="price" type="text" class="form-control" id="price" value="" required title="Price must number" pattern="[0-9]+(.[0-9]+)?">
+                                    <span class="form-message"></span>
+                                </div>
+                            </h3>
+
+                            <div style="margin-top:5rem" class="form-group">
+                                <input type="submit" value="Save changes" class="button button-contactForm btn_1 boxed-btn" id="buttonWriteReview">
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!--================ Blog Area end =================-->
+</main>
+
+
+<script>
+    // Get references to the image preview, upload input, and remove button
+    const previewImage = document.getElementById('previewImage');
+    const uploadInput = document.getElementById('uploadInput');
+    const removeButton = document.getElementById('removeButton');
+
+    // Add event listeners for the upload input and remove button
+    uploadInput.addEventListener('change', handleImageUpload);
+    removeButton.addEventListener('click', removeImage);
+
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            previewImage.src = event.target.result;
+            document.querySelector('#imageBase64').value = event.target.result;
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function removeImage() {
+        previewImage.src = '';
+        uploadInput.value = null; // Clear the value of the upload input if an image was selected
+    }
+
+    var genre__input = document.querySelector('#genre__input');
+    var new_genre_btn = document.querySelector('#new-genre-btn');
+    var genre__selector = genre__input.innerHTML;
+    var state = false;
+    new_genre_btn.addEventListener("click", function (event) {
+        event.preventDefault(); // prevents the browser from following the link (if any)
+
+        if (state) {
+            genre__input.innerHTML = genre__selector;
+            new_genre_btn.innerHTML = `<i style="color: #fff" class="bi bi-cloud-plus-fill"></i>`;
+            state = false;
+        } else {
+            genre__input.innerHTML = `
+                <input name="newgenreadding" type="text" class="form-control" value="true" hidden>
+                <input placeholder="Genre" name="newgenre" type="text" class="form-control" id="newgenre" value="">
+                <span class="form-message"></span>
+                `;
+            new_genre_btn.innerHTML = `<i style="color: #fff" class="bi bi-patch-minus-fill"></i>`;
+            state = true;
+        }
+    });
+
+    var author__input = document.querySelector('#author__input');
+    var new_author_btn = document.querySelector('#new-author-btn');
+    var author__selector = author__input.innerHTML;
+    var state = false;
+    new_author_btn.addEventListener("click", function (event) {
+        event.preventDefault(); // prevents the browser from following the link (if any)
+
+        if (state) {
+            author__input.innerHTML = author__selector;
+            new_author_btn.innerHTML = `<i style="color: #fff" class="bi bi-cloud-plus-fill"></i>`;
+            state = false;
+        } else {
+            author__input.innerHTML = `
+            <input name="newauthoradding" type="text" class="form-control" value="true" hidden>
+
+            <input placeholder="First name" name="authorFirstName" type="text" class="form-control" id="authorFirstName" value="">
+            <span class="form-message"></span>
+            <input placeholder="Last name" name="authorLastName" type="text" class="form-control" id="authorLastName" value="">
+            <span class="form-message"></span>
+            <textarea placeholder="Bio" name="authorBio" type="text" class="form-control" id="authorBio" value=""></textarea>
+            <span class="form-message"></span>
+            `;
+            new_author_btn.innerHTML = `<i style="color: #fff" class="bi bi-patch-minus-fill"></i>`;
+            state = true;
+        }
+    });
+
+
+    var publisher__input = document.querySelector('#publisher__input');
+    var new_publisher_btn = document.querySelector('#new-publisher-btn');
+    var publisher__selector = publisher__input.innerHTML;
+    var state = false;
+    new_publisher_btn.addEventListener("click", function (event) {
+        event.preventDefault(); // prevents the browser from following the link (if any)
+
+        if (state) {
+            publisher__input.innerHTML = publisher__selector;
+            new_publisher_btn.innerHTML = `<i style="color: #fff" class="bi bi-cloud-plus-fill"></i>`;
+            state = false;
+        } else {
+            publisher__input.innerHTML = `
+                <input name="newpublisheradding" type="text" class="form-control" value="true" hidden>
+                <input placeholder="Name" name="publisherName" type="text" class="form-control" id="publisherName" value="">
+                <span class="form-message"></span>
+                <input placeholder="Address" name="publisherAddress" type="text" class="form-control" id="publisherAddress" value="">
+                <span class="form-message"></span>
+                <input placeholder="Phone" name="publisherPhone" type="text" class="form-control" id="publisherPhone" value="">
+                <span class="form-message"></span>
+                `;
+            new_publisher_btn.innerHTML = `<i style="color: #fff" class="bi bi-patch-minus-fill"></i>`;
+            state = true;
+        }
+    });
+
+</script>
+
+
+<script src="./assets/js/form-validator.js" defer></script>
+
+<script src="../client/assets/js/vendor/modernizr-3.5.0.min.js"></script>
+<!-- Jquery, Popper, Bootstrap -->
+<script src="../client/assets/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="../client/assets/js/popper.min.js"></script>
+<script src="../client/assets/js/bootstrap.min.js"></script>
+<!-- Jquery Mobile Menu -->
+<script src="../client/assets/js/jquery.slicknav.min.js"></script>
+
+<!-- Jquery Slick , Owl-Carousel Plugins -->
+<script src="../client/assets/js/owl.carousel.min.js"></script>
+<script src="../client/assets/js/slick.min.js"></script>
+<!-- Date Picker -->
+<!-- One Page, Animated-HeadLin -->
+<script src="../client/assets/js/wow.min.js"></script>
+<script src="../client/assets/js/animated.headline.js"></script>
+<script src="../client/assets/js/jquery.magnific-popup.js"></script>
+
+<!-- Scrollup, nice-select, sticky -->
+<script src="../client/assets/js/jquery.scrollUp.min.js"></script>
+<script src="../client/assets/js/jquery.sticky.js"></script>
+
+<!-- contact js -->
+<script src="../client/assets/js/jquery.form.js"></script>
+<script src="../client/assets/js/jquery.validate.min.js"></script>
+<script src="../client/assets/js/mail-script.js"></script>
+<script src="../client/assets/js/jquery.ajaxchimp.min.js"></script>
+
+<!-- Jquery Plugins, main Jquery -->
+<script src="../client/assets/js/plugins.js"></script>
+<script src="../client/assets/js/main.js"></script>
+
+

@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewData["Title"] = "Cart";
+    Layout = "~/Pages/Shared/_LayoutCustomer.cshtml";
+}
+@using Project.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!--================Cart Area =================-->
+<section class="cart_area">
+    <div class="container">
+        <div class="cart_inner">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.emptyCart != null)
+                        {
+                            <label style="color: red;margin-top: 5px">@ViewBag.emptyCart</label>
+                        }else{
+                        <form action="/Home/UpdateCart" method="post">
+                        @foreach (CartHe172748 item in ViewBag.cartByCustomerId)
+                        {
+                        <tr>
+                            <td>
+                                <div class="media">
+                                    <div class="d-flex">
+                                        <img src="@item.Product.Img" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <p>@item.Product.Name</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <h5>$@item.Product.Price</h5>
+                                    <input name="productId" value="@item.Id" hidden />
+
+                            </td>
+                            <td>
+                                <div class="product_count">
+                                        <input type="number" name="@item.Id" value="@item.Amount" min="0" max="100" />
+                                </div>
+                            </td>
+                            <td>
+                                    <h5>$@item.Product.Price</h5>
+                            </td>
+                        </tr>
+                        }
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <h5>Subtotal</h5>
+                            </td>
+                            <td>
+                                <h5>$@ViewBag.total</h5>
+                                <input type="text" name="Total" value="@ViewBag.total" hidden/>
+                            </td>
+                        </tr>
+                        <tr class="bottom_button">
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <div class="cupon_text d-flex align-items-center">
+                                    <input type="text" placeholder="Address" name="Address" style="width: 500px; filter: none;" class="no-blur">
+                                    <label style="color: red;margin-top: 5px">@ViewBag.errorAddress</label>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="out_button_area">
+                            <td>
+                                <input id="text" name="customerId" value="@ViewBag.CustomerId" hidden />
+                                <button class="gray_btn" type="submit">Update Cart</button>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <div class="checkout_btn_inner d-flex align-items-center">
+                                    <a class="gray_btn" href="/Home/Index">Continue Shopping</a>
+                                    <button type="submit" class="primary-btn" name="Buy" value="Buy">Buy</button>
+                                </div>
+                            </td>
+                        </tr>
+                        </form>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Cart Area =================-->
+

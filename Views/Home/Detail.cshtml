@@ -1,0 +1,268 @@
+﻿@model Project.Models.ProductHe172748
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Pages/Shared/_LayoutCustomer.cshtml";
+}
+@using Project.Models
+<!--================Single Product Area =================-->
+<div class="product_image_area">
+	<div class="container">
+		<div class="row s_product_inner">
+			<div class="col-lg-6">
+				<div class="s_Product_carousel">
+					<div class="single-prd-item">
+						<img class="img-fluid" src="@ViewBag.product.Img" alt="">
+					</div>
+					<div class="single-prd-item">
+						<img class="img-fluid" src="@ViewBag.product.Img" alt="">
+					</div>
+					<div class="single-prd-item">
+						<img class="img-fluid" src="@ViewBag.product.Img" alt="">
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-5 offset-lg-1">
+				<div class="s_product_text">
+					<h3>@ViewBag.product.Name</h3>
+					<h2>$@ViewBag.product.Price</h2>
+					<ul class="list">
+						<li><a class="active" href="#"><span>Category</span> : @ViewBag.product.CategoryName</a></li>
+					</ul>
+					<p>
+						@ViewBag.product.Description
+					</p>
+@* 					<div class="product_count">
+						<label for="qty">Quantity:</label>
+						<input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+						<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+								class="increase items-count" type="button">
+							<i class="lnr lnr-chevron-up"></i>
+						</button>
+						<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
+								class="reduced items-count" type="button">
+							<i class="lnr lnr-chevron-down"></i>
+						</button>
+					</div> *@
+					<div class="card_area d-flex align-items-center">
+						<a class="primary-btn" href="/Home/AddToCart?idProduct=@ViewBag.product.Id&&idCategory=-1&&Amount=@ViewBag.product.Price&&idCustomer=@ViewBag.CustomerId">Add to Cart</a>
+						<a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
+						<a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--================End Single Product Area =================-->
+<!--================Product Description Area =================-->
+<section class="product_description_area">
+	<div class="container">
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
+				   aria-selected="false">Comments</a>
+			</li>
+		</ul>
+		<div class="tab-content" id="myTabContent">
+			<div class="tab-pane fade  show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+				@ViewBag.product.Tmp
+			</div>
+				<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+					@if (ViewBag.user != null)
+					{
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="comment_list">
+								@foreach (var item in @ViewBag.comment)
+								{
+									<div class="review_item">
+										<div class="media">
+											<div class="d-flex">
+												<img src="~/img/banner/user-placeholder-img.jpg" alt="" class="rounded-circle" style="max-height:40px; border:solid">
+											</div>
+											<div class="media-body">
+												<h4>@item.CusName</h4>
+												<h5>@item.CreateOn</h5>
+												@if (ViewBag.roleId != null)
+												{
+												<a class="reply_btn" href="/Home/DeleteComment?id=@item.Id&&proId=@ViewBag.product.Id">Delete</a>
+												}
+											</div>
+										</div>
+										<p>
+											@item.Content
+										</p>
+									</div>
+								}
+							</div>
+					</div>
+					<div class="col-lg-6">
+							@if (ViewBag.CustomerId != null)
+							{
+								<div class="review_box">
+									<form action="/Home/Comment" method="post">
+										<h4>Post a comment</h4>
+										<div class="col-md-12">
+											<div class="form-group">
+												<textarea class="form-control" name="message" id="message" rows="1" placeholder="Message"></textarea>
+											</div>
+											<input name="proId" value="@ViewBag.product.Id" hidden>
+										</div>
+										<div class="col-md-12 text-right">
+											<button type="submit" value="submit" class="btn primary-btn">Submit Now</button>
+										</div>
+									</form>
+								</div>
+							}
+						</div>
+				</div>
+				}
+				else
+				{
+					<div class="alert alert-success alert-dismissible fade show" role="alert">
+						Login to see and comment!
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				}
+			</div>
+			@* <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="row total_rate">
+							<div class="col-6">
+								<div class="box_total">
+									<h5>Overall</h5>
+									<h4>4.0</h4>
+									<h6>(03 Reviews)</h6>
+								</div>
+							</div>
+							<div class="col-6">
+								<div class="rating_list">
+									<h3>Based on 3 Reviews</h3>
+									<ul class="list">
+										<li>
+											<a href="#">
+												5 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 01
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												4 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 01
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												3 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 01
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												2 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 01
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												1 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 01
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="review_list">
+							<div class="review_item">
+								<div class="media">
+									<div class="d-flex">
+										<img src="img/product/review-1.png" alt="">
+									</div>
+									<div class="media-body">
+										<h4>Blake Ruiz</h4>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+									</div>
+								</div>
+								<p>
+									Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+									dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+									commodo
+								</p>
+							</div>
+							<div class="review_item">
+								<div class="media">
+									<div class="d-flex">
+										<img src="img/product/review-2.png" alt="">
+									</div>
+									<div class="media-body">
+										<h4>Blake Ruiz</h4>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+									</div>
+								</div>
+								<p>
+									Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+									dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+									commodo
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="review_box">
+							<h4>Add a Review</h4>
+							<p>Your Rating:</p>
+							<div class="single-element-widget mt-30">
+								<h3 class="mb-30">Your Rating:</h3>
+								<div class="default-select" id="default-select" ">
+									<select>
+										<option value="1">1 star</option>
+										<option value="2">2 star</option>
+										<option value="3">3 star</option>
+										<option value="4">4 star</option>
+										<option value="5">5 star</option>
+									</select>
+								</div>
+							</div>
+							<form class="row contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
+								<div class="col-md-12">
+									<div class="form-group">
+										<input type="text" class="form-control" id="name" name="name" placeholder="Your Full name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Full name'">
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<input type="email" class="form-control" id="email" name="email" placeholder="Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Address'">
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<input type="text" class="form-control" id="number" name="number" placeholder="Phone Number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Phone Number'">
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<textarea class="form-control" name="message" id="message" rows="1" placeholder="Review" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Review'"></textarea></textarea>
+									</div>
+								</div>
+								<div class="col-md-12 text-right">
+									<button type="submit" value="submit" class="primary-btn">Submit Now</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div> *@
+		</div>
+	</div>
+</section>
+<!--================End Product Description Area =================-->

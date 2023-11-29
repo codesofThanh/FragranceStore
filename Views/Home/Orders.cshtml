@@ -1,0 +1,259 @@
+﻿@using Project.Models
+
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "~/Pages/Shared/_LayoutCustomer.cshtml";
+}
+
+<main>
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../admin/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../admin/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../admin/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../admin/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="../admin/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="../admin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="assets/css/style.css" rel="stylesheet">
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Section tittle -->
+                        <div class="row justify-content-center">
+                            <div class="col-xl-7 col-lg-10 col-md-12">
+                                <div class="section-tittle mb-70 text-center">
+                                    <h2>Orders</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align: center">@ViewBag.messEmp</p>
+                        <!-- Default Accordion -->
+                        <div class="accordion" id="accordionExample">
+                            @{
+                                // Gán giá trị từ ViewBag vào biến Razor
+                                var index = 1;
+                            }
+                            <c:forEach items="${sList}" var="s">
+                                <c:choose>
+                                    <c:when test="${s.status.id == 1}">
+                                        <c:set var="statusfontcolor" value="#ab5b00" />
+                                    </c:when>
+                                    <c:when test="${s.status.id == 2}">
+                                        <c:set var="statusfontcolor" value="#9ea100" />
+                                    </c:when>
+                                    <c:when test="${s.status.id == 3}">
+                                        <c:set var="statusfontcolor" value="#00a128" />
+                                    </c:when>
+                                    <c:when test="${s.status.id == 4}">
+                                        <c:set var="statusfontcolor" value="red" />
+                                    </c:when>
+                                </c:choose>
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading${s.id}">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${s.id}" aria-expanded="false" aria-controls="collapse${s.id}">
+                                            @index | <strong style="margin: 0 10px"> Date: </strong> ${s.date} | <strong style="margin: 0 10px; color:${statusfontcolor}"> Status: ${s.status}</strong>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse${s.id}" class="accordion-collapse collapse" aria-labelledby="heading${s.id}" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <div>
+                                                <div class="order-detail-info">
+                                                    <h6>OrderID: </h6>
+                                                    <p>${s.id}</p>
+                                                </div>
+                                                <div class="order-detail-info">
+                                                    <h6>Full name: </h6>
+                                                    <p>${s.firstName} ${s.lastName}</p>
+                                                </div>
+                                                <div class="order-detail-info">
+                                                    <h6>Address: </h6>
+                                                    <p>${s.address}</p>
+                                                </div>
+                                                <div class="order-detail-info">
+                                                    <h6>City: </h6>
+                                                    <p>${s.city}</p>
+                                                </div>
+                                                <div class="order-detail-info">
+                                                    <h6>State: </h6>
+                                                    <p>${s.state}</p>
+                                                </div>
+                                                <div class="order-detail-info">
+                                                    <h6>Country: </h6>
+                                                    <p>${s.country}</p>
+                                                </div>
+                                                <div class="order-detail-info">
+                                                    <h6>Order date: </h6>
+                                                    <p>${s.date}</p>
+                                                </div>
+                                                <div class="order-detail-info">
+                                                    <h6>Payment: </h6>
+                                                    <p>${s.payMethod.name}</p>
+                                                </div>
+                                            </div>
+
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Book</th>
+                                                        <th scope="col">Quantity</th>
+                                                        <th scope="col">Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <c:forEach items="${s.sdList}" var="sd">
+                                                        <tr>
+                                                            <td><img id="img-book-cover" src="${sd.book.imagePath}" alt="book-cover-image" /> <span>${sd.book.title}</span></td>
+                                                            <td>${sd.quantity}</td>
+                                                            <td>${sd.totalPrice}</td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </table>
+
+                                            <c:choose>
+                                                <c:when test="${s.status.id == 1}">
+                                                    <c:set var="process" value="5" />
+                                                    <c:set var="processMss" value="package" />
+                                                    <c:set var="refund" value="Cancel" />
+                                                </c:when>
+                                                <c:when test="${s.status.id == 2}">
+                                                    <c:set var="process" value="50" />
+                                                    <c:set var="processMss" value="shipment" />
+                                                    <c:set var="refund" value="disabled" />
+                                                </c:when>
+                                                <c:when test="${s.status.id == 3}">
+                                                    <c:set var="process" value="100" />
+                                                    <c:set var="processMss" value="disable" />
+                                                    <c:set var="refund" value="Refund" />
+                                                </c:when>
+                                                <c:when test="${s.status.id == 4}">
+                                                    <c:set var="process" value="0" />
+                                                    <c:set var="processMss" value="disable" />
+                                                </c:when>
+                                            </c:choose>
+                                            <div style="display:flex;justify-content:space-between">
+                                                <span style="color: #ab5b00">Awaiting package</span>
+                                                <span style="color: #9ea100">Awaiting shipment</span>
+                                                <span style="color: #00a128">Completed</span>
+                                            </div>
+                                            <div class="progress mt-3">
+                                                <div class="progress-bar progress-bar-striped bg-info progress-bar-animated" role="progressbar" style="width: ${process}%" aria-valuenow="${process}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <c:choose>
+                                                <c:when test="${refund eq 'Cancel'}">
+                                                    <div class="card-body">
+                                                        <!-- Vertically centered Modal -->
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered${s.id}">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </c:when>
+                                                <c:when test="${refund eq 'Refund'}">
+                                                    <div class="card-body">
+                                                        <!-- Vertically centered Modal -->
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered${s.id}">
+                                                            Refund
+                                                        </button>
+                                                    </div>
+                                                </c:when>
+                                                <c:when test="${refund eq 'disabled'}">
+                                                    <button id="button-status" title="You cann't cancel this order due to shipping!" ${refund} style="margin-top:1rem" type="button" class="btn btn-primary rounded-pill">Cancel</button>
+                                                </c:when>
+                                            </c:choose>
+                                        </div>
+                                    </div>
+                                </div>
+                                @{
+                                    // Gán giá trị từ ViewBag vào biến Razor
+                                    index = index + 1;
+                                }
+                                <c:choose>
+                                    <c:when test="${refund eq 'Cancel'}">
+                                        <div class="modal fade" id="verticalycentered${s.id}" tabindex="-1" style="display: none;" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Canceling order</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Do you want to cancel this order?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <a href="cancel?orderid=${s.id}"><button type="button" class="btn btn-primary">Yes</button></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- End Vertically centered Modal-->
+                                    </c:when>
+
+                                    <c:when test="${refund eq 'Refund'}">
+                                        <div class="modal fade" id="verticalycentered${s.id}" tabindex="-1" style="display: none;" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Refunding order</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Do you want to refund this order?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <a href="refund?orderid=${s.id}"><button type="button" class="btn btn-primary">Yes</button></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- End Vertically centered Modal-->
+                                    </c:when>
+                                </c:choose>
+                            </c:forEach>
+                        </div><!-- End Default Accordion Example -->
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Vendor JS Files -->
+    <script src="../admin/assets/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../admin/assets/vendor/chart.js/chart.umd.js"></script>
+    <script src="../admin/assets/vendor/echarts/echarts.min.js"></script>
+    <script src="../admin/assets/vendor/quill/quill.min.js"></script>
+    <script src="../admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="../admin/assets/vendor/tinymce/tinymce.min.js"></script>
+    <script src="../admin/assets/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="../admin/assets/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+        function actionComfirmation() {
+            prompt('Do you want to ${refund} this order?');
+        }
+
+    </script>
+
+
+</main>
